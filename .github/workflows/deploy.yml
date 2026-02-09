@@ -6,7 +6,7 @@ on:
 
 env:
   PROJECT_ID: "agentgo-studio"
-  REGION: "asia-northeast3"            
+  REGION: "asia-northeast3-b"            
   REPO_NAME: "ai-server"               
   IMAGE_NAME: "agentgo-ai-app"
   VM_NAME: "agentgo-dev"
@@ -56,7 +56,7 @@ jobs:
           FULL_IMG_TAG=${{ env.IMAGE_BASE }}:${{ github.sha }}
  
           # SSH를 통해 VM 내부 명령 실행
-          gcloud compute ssh ${{ env.VM_NAME }} --zone=${{ env.REGION }} --tunnel-through-iap --command="
+          gcloud compute ssh ${{ env.VM_NAME }} --zone=${{ env.REGION }} --tunnel-through-iap --quiet --command="
             # 1. 아티팩트 레지스트리 인증
             gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
             
