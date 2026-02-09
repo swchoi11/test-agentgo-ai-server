@@ -58,7 +58,7 @@ jobs:
           # SSH를 통해 VM 내부 명령 실행
           gcloud compute ssh ${{ env.VM_NAME }} --zone=${{ env.REGION }} --tunnel-through-iap --quiet --command="
             # 1. 아티팩트 레지스트리 인증
-            gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+            gcloud auth configure-docker asia-northeast3-docker.pkg.dev --quiet
             
             # 2. 새 이미지 가져오기
             docker pull $FULL_IMAGE_TAG
