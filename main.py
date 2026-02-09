@@ -1,11 +1,11 @@
 import os
 import json
-from google.cloud import pubsub_v1, secret_manager
+from google.cloud import pubsub_v1, secretmanager
 
 from process import process_message
 
 def get_secret(secret_id):
-    client = secret_manager.SecretManagerServiceClient()
+    client = secretmanager.SecretManagerServiceClient()
     project_id = "agentgo-studio"
     name=f"projects/{project_id}/{secret_id}/versions/latest"
 
