@@ -6,11 +6,11 @@ on:
 
 env:
   PROJECT_ID: "agentgo-studio"
-  REGION: "asia-northeast3-b"            
+  REGION: "asia-northeast3"
+  VM_ZONE: "asia-northeast3-b"
   REPO_NAME: "ai-server"               
   IMAGE_NAME: "agentgo-ai-app"
   VM_NAME: "agentgo-dev"
-
 
 jobs:
   deploy:
@@ -38,8 +38,8 @@ jobs:
 
       - name: Docker Auth
         run: |
-          gcloud auth configure-docker asia-northeast3-docker.pkg.dev --quiet
-
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+      
       - name: Build and Push Container
         run: |
           # 이미지 전체 주소 생성
@@ -56,25 +56,29 @@ jobs:
           FULL_IMG_TAG=${{ env.IMAGE_BASE }}:${{ github.sha }}
  
           # SSH를 통해 VM 내부 명령 실행
-          gcloud compute ssh ${{ env.VM_NAME }} --zone=${{ env.REGION }} --tunnel-through-iap --quiet --command="
-            # 1. 아티팩트 레지스트리 인증
-            gcloud auth configure-docker asia-northeast3-docker.pkg.dev --quiet
-            
-            # 2. 새 이미지 가져오기
-            docker pull $FULL_IMAGE_TAG
-            
-            # 3. 기존 컨테이너 정리
-            docker stop worker-app || true
-            docker rm worker-app || true
-            
-            # 4. 새 컨테이너 실행
-            docker run -d --name worker-app \
-              --restart always \
-              -e PROJECT_ID=${{ env.PROJECT_ID }} \
-              -e INPUT_TOPIC_ID=${{ secrets.INPUT_TOPIC_ID }} \
-              -e OUTPUT_TOPIC_ID=${{ secrets.OUTPUT_TOPIC_ID }} \
-              $FULL_IMAGE_TAG
-            
-            # 5. 사용하지 않는 이미지 정리 (디스크 용량 관리)
-            docker image prune -f
+          gcloud compute ssh ${{ env.VM_NAME }} \
+            --zone=${{ env.VM_ZONE }} \
+            --tunnel-through-iap \
+            --quiet \
+            --command="
+              # VM 내부에서 레지스트리 인증
+              gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+              
+              # 새 이미지 가져오기
+              docker pull $FULL_IMG_TAG
+              
+              # 기존 컨테이너 중지 및 삭제
+              docker stop worker-app || true
+              docker rm worker-app || true
+              
+              # 새 컨테이너 실행
+              docker run -d --name worker-app \
+                --restart always \
+                -e PROJECT_ID=${{ env.PROJECT_ID }} \
+                -e INPUT_TOPIC_ID=${{ secrets.INPUT_TOPIC_ID }} \
+                -e OUTPUT_TOPIC_ID=${{ secrets.OUTPUT_TOPIC_ID }} \
+                $FULL_IMG_TAG
+              
+              # 안 쓰는 이미지 삭제
+              docker image prune -f
           "
