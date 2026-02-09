@@ -7,10 +7,10 @@ from process import process_message
 def get_secret(secret_id):
     client = secretmanager.SecretManagerServiceClient()
     project_id = "agentgo-studio"
-    name=f"projects/{project_id}/{secret_id}/versions/latest"
+    resource_name=f"projects/{project_id}/{secret_id}/versions/latest"
 
     try:
-        response = client.access_secret_version()
+        response = client.access_secret_version(request={"name": resource_name})
         return response.payload.data.decode("utf-8")
     except Exception as e:
         print(e)
