@@ -27,7 +27,7 @@ jobs:
         run: | 
           echo "IMAGE_BASE=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
 
-      - id: Google Auth
+      - name: Google Auth
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: "projects/700065559284/locations/global/workloadIdentityPools/test-github-provider/providers/test-github-deployer"
