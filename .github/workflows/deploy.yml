@@ -62,17 +62,17 @@ jobs:
             --quiet \
             --command="
               # VM 내부에서 레지스트리 인증
-              gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+              sudo gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
               
               # 새 이미지 가져오기
-              docker pull $FULL_IMG_TAG
+              sudo docker pull $FULL_IMG_TAG
               
               # 기존 컨테이너 중지 및 삭제
-              docker stop worker-app || true
-              docker rm worker-app || true
+              sudo docker stop worker-app || true
+              sudo docker rm worker-app || true
               
               # 새 컨테이너 실행
-              docker run -d --name worker-app \
+              sudo docker run -d --name worker-app \
                 --restart always \
                 -e PROJECT_ID=${{ env.PROJECT_ID }} \
                 -e INPUT_TOPIC_ID=${{ secrets.INPUT_TOPIC_ID }} \
@@ -80,5 +80,5 @@ jobs:
                 $FULL_IMG_TAG
               
               # 안 쓰는 이미지 삭제
-              docker image prune -f
+              sudo docker image prune -f
           "
