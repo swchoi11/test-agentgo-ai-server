@@ -25,6 +25,7 @@ def callback(message):
         try:
             vm_output_value = processed_result.get("vm_output")
             success = update_record(db_id, vm_output_value)
+            print(success)
 
             if success:
                 print("성공")

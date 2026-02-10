@@ -50,10 +50,11 @@ def get_db():
 def update_record(db_id: int, vm_output: str):
     db = SessionLocal()
     try:
-        record = db.query(Test).filter(Test.id==db_id).first()
+        record = db.query(Test).filter(Test.id==int(db_id)).first()
         if record:
             record.vm_output = vm_output
             db.commit()
+            print("{db_id}업데이트 완료")
             return True
     except Exception as e:
         db.rollback()
