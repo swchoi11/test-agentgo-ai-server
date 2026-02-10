@@ -9,10 +9,10 @@ def process_message(raw_input):
         print(f"수신된 요청 : user_name [{user_name}], user_input [{user_input}]")
 
         processed_value = f"{user_input}000"
-
         result_payload = f"{user_name}_{processed_value}"
 
-        return result_payload
+        return {"vm_output": result_payload}
 
     except Exception as e:
         print(e)
+        return None
