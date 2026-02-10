@@ -7,7 +7,7 @@ from process import process_message
 def get_secret(secret_id):
     client = secretmanager.SecretManagerServiceClient()
     project_id = "agentgo-studio"
-    resource_name=f"projects/{project_id}/{secret_id}/versions/latest"
+    resource_name=f"projects/{project_id}/secrets/{secret_id}/versions/latest"
 
     try:
         response = client.access_secret_version(request={"name": resource_name})
