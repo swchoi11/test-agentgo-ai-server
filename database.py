@@ -8,7 +8,7 @@ db_user = get_secret("DB_USER")
 db_password = get_secret("DB_PASSWORD")
 db_name = get_secret("DB_NAME")
 region = get_secret("REGION")
-instance_name = get_secret("INSTANCE_NAME")
+instance_name = get_secret("SQL_INSTANCE_NAME")
 
 connector = Connector()
 
