@@ -17,13 +17,13 @@ def get_secret(secret_id):
         return None
 
 PROJECT_ID = os.getenv("PROJECT_ID")
-INPUT_TOPIC_ID = get_secret("INPUT_TOPIC_ID")
+INPUT_SUBS_ID = get_secret("INPUT_SUBS_ID")
 OUTPUT_TOPIC_ID = get_secret("OUTPUT_TOPIC_ID")
 
 subscriber = pubsub_v1.SubscriberClient()
 publisher = pubsub_v1.PublisherClient()
 
-subs_path = subscriber.subscription_path(PROJECT_ID,INPUT_TOPIC_ID)
+subs_path = subscriber.subscription_path(PROJECT_ID,INPUT_SUBS_ID)
 pubs_path = publisher.topic_path(PROJECT_ID, OUTPUT_TOPIC_ID)
 
 def callback(input):
