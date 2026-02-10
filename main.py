@@ -22,8 +22,8 @@ def callback(message):
     processed_result = process_message(message)
 
     if processed_result and isinstance(processed_result, dict):
+        vm_output_value = processed_result.get("vm_output")
         try:
-            vm_output_value = processed_result.get("vm_output")
             success = update_record(db_id, vm_output_value)
             print(success)
 
@@ -42,6 +42,7 @@ def callback(message):
         
     else:
         message.nack()
+        print("처리실패")
 
 if __name__ == "__main__" :
     flow_control = pubsub_v1.types.FlowControl(max_messages=10)

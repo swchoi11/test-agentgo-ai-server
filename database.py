@@ -40,20 +40,16 @@ class Test(Base):
     user_input = Column(Integer)
     vm_output = Column(String)
 
-def get_db():
-    db=SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 def update_record(db_id: int, vm_output: str):
     db = SessionLocal()
     try:
         record = db.query(Test).filter(Test.id==int(db_id)).first()
         if record:
-            record.vm_output = vm_output
+            record.vm_output = str(vm_output)
+            db.add(record)
             db.commit()
+            db.refresh(record)
             print("{db_id}업데이트 완료")
             return True
     except Exception as e:
